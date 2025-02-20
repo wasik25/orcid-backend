@@ -1,5 +1,4 @@
 from django.shortcuts import render,redirect,get_object_or_404
-import pandas as pd
 from django.http import HttpResponse,HttpResponseRedirect,FileResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import update_session_auth_hash
@@ -133,7 +132,6 @@ def download_excel(request):
         'Email': [user.email for user in User.objects.all()],
         'Status': ['Active' if user.is_active else 'Inactive' for user in User.objects.all()],
     }
-    df = pd.DataFrame(data)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="users.xlsx"'
