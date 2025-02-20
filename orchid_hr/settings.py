@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-n+n*rp8rrq5gerax$xyc9(hkc%bqn1)&3rfq4w8np83*-ftf2o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
 
 
 # Application definition
@@ -88,7 +88,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'orchid_hr.wsgi.application'
+WSGI_APPLICATION = 'orchid_hr.wsgi.app'
 
 
 # Database
@@ -147,6 +147,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+#STATIC_ROOT = [BASE_DIR / "staticfiles"]
 MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR),'project_static','root_static')
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),'project_static','root_media')
