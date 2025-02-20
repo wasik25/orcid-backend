@@ -213,7 +213,7 @@ SIMPLE_JWT = {
 }
 CORS_ORIGIN_ALLOW_ALL=True
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Add your React frontend URL here
+    "https://orcid-frontend.vercel.app",  # Add your React frontend URL here
 ]
 
 # Allow credentials (cookies, authorization headers, etc.)
