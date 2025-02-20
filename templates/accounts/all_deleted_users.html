@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+
+{% block navheader %}
+    {% include 'includes/navheader_employee_app.html' %}
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <section class="container-fluid">
+        <section class="row">
+            <section class="col col-lg-12 text-center">
+                <h3 class="title-h3">List of Deleted Users</h3>
+            </section>
+        </section>
+
+        <section class="row">
+            <section class="col col-lg-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col">Employee (Full Name)</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for emp in employees %}
+                        <tr>
+                            <td>{{ emp.user.username }}</td>
+                            <td>{{ emp.get_full_name }}</td>
+                            <td>{{ emp.department }}</td>
+                            <td>
+                                <a href="{% url 'accounts:users_unblock' emp.id %}" class="btn btn-success btn-sm">
+                                    Unblock
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </section>
+    </section>
+</section>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $(document).ready(function () {
+        console.log("Deleted users page loaded");
+    });
+</script>
+{% endblock %}

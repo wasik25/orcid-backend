@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% block stylesheet %}
+<style>
+    .container {
+        max-width: 600px;
+        margin: auto;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .btn-lg {
+        font-size: 18px;
+    }
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Update Attendance</h2>
+    <div class="card shadow p-4 mt-3">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="id_check_in" class="form-label">Check In:</label>
+                <input type="time" name="check_in" id="id_check_in" class="form-control" value="{{ form.check_in.value|default:'' }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_check_out" class="form-label">Check Out:</label>
+                <input type="time" name="check_out" id="id_check_out" class="form-control" value="{{ form.check_out.value|default:'' }}">
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg px-4">Save</button>
+                <a href="{% url 'attendance_list' %}" class="btn btn-secondary btn-lg px-4">Cancel</a>
+ 

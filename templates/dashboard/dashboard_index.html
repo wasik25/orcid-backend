@@ -1,0 +1,105 @@
+{% extends 'layout.html' %}
+{% block title %} {{ title }} {% endblock %}
+
+{% block stylesheet %}
+<style>
+.sec-box {
+    width:400px;
+    height: 160px;
+    max-width: 100%;
+    line-height: 160px;
+    text-align: center;
+    position: relative;
+    font-size: 1.9rem;
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+    transition: all 400ms ease-in;
+    font-variant: petite-caps;
+    margin: 20px 0; /* Added margin for spacing */
+}
+
+.sec-box a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.employee-box {
+    background: #C70039;
+}
+
+.leave-box {
+    background: #900C3F;
+    color: #3ea7c7 !important;
+}
+
+.birthday-box {
+    background: #581845;
+}
+
+.count-object {
+    position: absolute;
+    top: 40%;
+    right: 12px;
+    font-size: 29px;
+    font-weight: 100;
+    font-variant: petite-caps;
+    color: #f5f5f5;
+    text-shadow: 1px 1px rgba(8, 8, 8, 0.23);
+}
+
+.dashboard-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Adjust gap between sections */
+    justify-content: space-around;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <section class="container-fluid">
+        <div class="dashboard-container">
+            {% if request.user.is_superuser and request.user.is_staff %}
+                <div class="sec-box employee-box">
+                    <a href="#">
+                        <span>Employees</span>
+                    </a>
+                    <span class="count-object">{{ employees.count }}</span>
+                </div>
+                <div class="sec-box leave-box">
+                    <a href="#">
+                        <span>Leaves</span>
+                    </a>
+                    <span class="count-object">{{ leaves.count }}</span>
+                </div>
+                <div class="sec-box birthday-box">
+                    <a href="#">
+                        <span>Birthdays</span>
+                    </a>
+                    <span class="count-object">{{ employees_birthday.count }}</span>
+                </div>
+            {% else %}
+                <div class="sec-box leave-box">
+                    <a href="#">
+                        <span>Leaves</span>
+                    </a>
+                    <span class="count-object">{{ staff_leaves.count }}</span>
+                </div>
+                <div class="sec-box birthday-box">
+                    <a href="#">
+                        <span>Birthdays</span>
+                    </a>
+                    <span class="count-object">{{ employees_birthday.count }}</span>
+                </div>
+            {% endif %}
+        </div>
+        
+    </section>
+</section>
+{% endblock %}
+
+{% block extrajs %}
+
+
+{% endblock %}

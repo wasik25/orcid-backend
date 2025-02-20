@@ -1,0 +1,203 @@
+{% load static %}
+{% load humanize %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Dashboard - ORCID H.R | {% block title %} {{ title }} {% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="author" content="Mike Edward <Fullstack Developer>, mail - edward.mike.anaryo@gmail.com">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Anton|Russo+One|Roboto:400,700,300" rel="stylesheet">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+
+    <!-- Animation library for notifications -->
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet" />
+
+    <!-- Light Bootstrap Table core CSS -->
+    <link href="{% static 'css/light-bootstrap-dashboard.css' %}" rel="stylesheet" />
+
+    <!-- Fonts and icons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'css/pe-icon-7-stroke.css' %}" rel="stylesheet" />
+
+    <!-- jQuery UI for Datepicker -->
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+
+    <!-- Additional Styles -->
+    {% block stylesheet %}
+    <style>
+        .title-h3 {
+            font-weight: bold;
+            font-variant: petite-caps;
+        }
+
+        .sidebar {
+            -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+            transition: all 400ms ease-in;
+            background-color: black !important;
+            background-image: none !important;
+        }
+
+        .sidebar:hover {
+            -webkit-box-shadow: 0 8px 17px 2px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 17px 2px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        .shadow {
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        a.simple-text {
+            font-family: 'Russo One', sans-serif;
+        }
+
+        a.simple-text > span {
+            font-size: 13px !important;
+        }
+
+        .logo a {
+            font-family: 'Luckiest Guy', cursive;
+        }
+
+        .sub-title {
+            vertical-align: -webkit-baseline-middle;
+            font-size: 12px;
+            font-family: 'Luckiest Guy', cursive;
+        }
+
+        tr td {
+            font-variant: petite-caps;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar" data-color="black" style="background-color: black !important;">
+            <div class="sidebar-wrapper">
+                <div class="logo">
+                    <a href="#" class="simple-text">
+                        ORCID <span>HRM</span>
+                    </a>
+                </div>
+                <ul class="nav">
+                    <li>
+                        <a href="/">
+                            <i class="pe-7s-home"></i>
+                            <p>Home</p>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="{% url 'dashboard:dashboard' %}">
+                            <i class="pe-7s-graph"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'attendance_list' %}">
+                            <i class="pe-7s-graph"></i>
+                            <p>Attendance</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:userprofile' %}">
+                            <i class="pe-7s-id"></i>
+                            <p>User Profile</p>
+                        </a>
+                    </li>
+                    {% if request.user.is_superuser and request.user.is_staff %}
+                    <li>
+                        <a href="{% url 'dashboard:employees' %}">
+                            <i class="pe-7s-users"></i>
+                            <p>Employee</p>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        {% if request.user.is_superuser %}
+                            <a href="{% url 'dashboard:leaveslist' %}">
+                        {% else %}
+                            <a href="{% url 'dashboard:staffleavetable' %}">
+                        {% endif %}
+                            <i class="pe-7s-news-paper"></i>
+                            <p>Leave</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'dashboard:birthdays' %}">
+                            <i class="pe-7s-gift"></i>
+                            <p>Birthday {{ employees_birthday.count }}</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Panel -->
+        <div class="main-panel">
+            <!-- Navigation Header -->
+            {% block navheader %}
+                {% include 'includes/navheader_default.html' %}
+            {% endblock %}
+
+            <!-- Main Content -->
+            {% block content %}
+            <section class="content">
+                <section class="container-fluid">
+                    <!-- Page-specific content goes here -->
+                </section>
+            </section>
+            {% endblock %}
+
+            <!-- Footer -->
+            <footer class="footer">
+    <div class="container-fluid text-center">
+        <p class="text-muted">&copy; 2025 <a href="#">ORCID IT Dept.</a></p>
+    </div>
+</footer>
+        </div>
+    </div>
+
+    <!-- Core JS Files -->
+    <script src="{% static 'js/jquery.3.2.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- Additional JS -->
+    {% block extrajs %}
+    <script>
+        $(document).ready(function () {
+            // Refresh button functionality
+            $('.refresh-page').click(function () {
+                location.reload(true);
+            });
+
+            // Datepicker functionality
+            $("#id_birthday, #id_dateissued, #id_startdate, #id_enddate").datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+        });
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.prev-holder .prev-avatar').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+    {% endblock %}
+</body>
+</html>

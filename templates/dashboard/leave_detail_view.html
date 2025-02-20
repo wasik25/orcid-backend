@@ -1,0 +1,144 @@
+{% extends 'layout.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+{% load crispy_forms_tags %}
+
+{% block navheader %}
+    {% include 'includes/navheader_employee_app.html' %}
+{% endblock %}
+
+{% block stylesheet %}
+<style>
+    .rounded-circle-image {
+        border-radius: 50% !important;
+        width: 250px;
+        height: 250px;
+    }
+
+    .form-wrapper {
+        background: #fff;
+        -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+        padding: 2rem;
+        border-radius: 8px;
+    }
+
+    .list-group {
+        margin-top: 10px;
+    }
+
+    .list-group-item {
+        padding: 10px 15px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        font-size: 17px;
+    }
+
+    .alert-warning {
+        background: #fd7b7b;
+        color: white;
+    }
+
+    .alert-success {
+        background-color: #82b72a;
+        color: white;
+    }
+
+    .employee-name-title {
+        color: #3873b1;
+        font-weight: 600;
+        font-variant: petite-caps;
+        font-size: 3.1rem !important;
+    }
+
+    .btn-group .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <section class="container-fluid">
+        <!-- Form Wrapper -->
+        <section class="form-wrapper">
+            <!-- Alert Messages -->
+            <section class="row">
+                <section class="col-lg-12">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                                {{ message }}
+                                <button type="button" class="close" id="override-start" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </section>
+            </section>
+
+            <!-- Title Section -->
+            <section class="row">
+                <section class="col-lg-12 text-center space-margin">
+                    <h3 class="employee-name-title">{{ employee.get_full_name }}</h3>
+                </section>
+            </section>
+
+            <!-- Leave Details -->
+            <section class="row">
+                <!-- Profile Picture -->
+                <section class="col-lg-4 text-center">
+                    {% if employee.image %}
+                        <img src="{{ employee.image.url }}" class="img-fluid rounded-circle-image">
+                    {% else %}
+                        <img src="/media/default.png" class="img-fluid rounded-circle-image">
+                    {% endif %}
+                </section>
+
+                <!-- Leave Information -->
+                <section class="col-lg-8 col-md-12">
+                    <div class="list-group">
+                        <a class="list-group-item"><span>Employee:</span> <div>{{ employee.get_full_name }}</div></a>
+                        <a class="list-group-item"><span>Start Date:</span> <div>{{ leave.startdate }}</div></a>
+                        <a class="list-group-item"><span>End Date:</span> <div>{{ leave.enddate }}</div></a>
+                        <a class="list-group-item"><span>Duration:</span> <div>{{ leave.leave_days }} days</div></a>
+                        <a class="list-group-item"><span>Type:</span> <div>{{ leave.leavetype }}</div></a>
+                        <a class="list-group-item"><span>Reason:</span> <div>{{ leave.reason }}</div></a>
+                        <a class="list-group-item"><span>Status:</span> <div>{{ leave.status }}</div></a>
+                    </div>
+                    <span style="font-size: 13px;" class="pull-left">Created {{ leave.created }}</span>
+                </section>
+            </section>
+
+            <!-- Admin Actions -->
+            {% if request.user.is_superuser and request.user.is_staff %}
+            <section class="row">
+                <section class="col-lg-4 col-lg-offset-7 text-center">
+                    <div class="btn-group btn-group-justified">
+                        {% if leave.leave_approved %}
+                            <a href="{% url 'dashboard:userleaveunapprove' leave.id %}" class="btn btn-primary">UNAPPROVE</a>
+                        {% else %}
+                            <a href="{% url 'dashboard:userleaveapprove' leave.id %}" class="btn btn-primary">APPROVE</a>
+                        {% endif %}
+                        <a href="{% url 'dashboard:userleavecancel' leave.id %}" class="btn btn-info">CANCEL</a>
+                        <a href="{% url 'dashboard:reject' leave.id %}" class="btn btn-warning">REJECT</a>
+                    </div>
+                </section>
+            </section>
+            {% endif %}
+        </section>
+    </section>
+</section>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("Leave Detail Page Loaded");
+    });
+</script>
+{% endblock %}

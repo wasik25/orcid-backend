@@ -1,0 +1,134 @@
+{% extends 'layout.html' %} 
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block navheader %}
+    {% include 'includes/navheader_employee_app.html' %}
+{% endblock %}
+
+{% block stylesheet %}
+<style>
+    .pe-7s-lock, .pe-7s-unlock {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .pe-7s-unlock {
+        color: #22c322; /* Green for active users */
+    }
+
+    .pe-7s-lock {
+        color: #dc233c; /* Red for inactive users */
+    }
+
+    .table-shadow {
+        background: white;
+        padding: 2%;
+        -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .title-h3 {
+        margin: 2px 0 5px 0 !important;
+        font-weight: bold;
+    }
+
+    .table-description {
+        margin-bottom: 20px;
+        text-align: center;
+        font-family: 'Roboto', sans-serif;
+        font-size: 16px;
+    }
+
+    .download-print-action {
+        padding-bottom: 12px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .download-print-action a {
+        margin-right: 10px;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .download-print-action a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <section class="container-fluid">
+        <!-- Table Wrapper -->
+        <div class="table-shadow">
+            <!-- Title -->
+            <div class="text-center table-description">
+                <h4 class="title-h3">Application Users</h4>
+            </div>
+
+            <!-- Download/Print Actions -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="download-print-action">
+                        <a href="{% url 'accounts:download_excel' %}">Download Excel</a> |
+                        <a href="{% url 'accounts:download_pdf' %}">Download PDF</a> |
+                        <a href="javascript:window.print()">Print</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Username</th>
+                        <th scope="col">Employee (Full Name)</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emp in employees %}
+                    <tr>
+                        <td>{{ emp.user.username }}</td>
+                        <td>{{ emp.get_full_name }}</td>
+                        <td>{{ emp.department }}</td>
+                        <td>
+                            {% if emp.user.is_active %}
+                                Active
+                            {% else %}
+                                Inactive
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if emp.user.is_active and emp.user.is_superuser %}
+                                <span style="font-style:italic;">(admin)</span>
+                            {% elif emp.user.is_active %}
+                                <a href="{% url 'accounts:userblock' emp.user.id %}" title="Block User">
+                                    <i class="pe-7s-unlock"></i>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'accounts:userunblock' emp.user.id %}" title="Unblock User">
+                                    <i class="pe-7s-lock"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $(document).ready(function () {
+        console.log("User management table loaded successfully.");
+    });
+</script>
+{% endblock %}
